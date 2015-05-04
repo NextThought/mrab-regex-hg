@@ -1,0 +1,3 @@
+A new regex implementation intended eventually to replace Python's current re module implementation.
+
+For testing and comparison with the current 're' module, the new implementation is in the form of a module called 'regex'.
