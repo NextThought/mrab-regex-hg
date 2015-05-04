@@ -60,6 +60,28 @@
 #endif
 
 #endif
+
+#ifdef PYPY_VERSION
+/* PyPy does not define PyLong_FromUnicode, so include our own implementation */
+PyObject *
+PyLong_FromUnicode(Py_UNICODE *u, Py_ssize_t length, int base)
+{
+	PyObject *result;
+	char *buffer = (char *)PyMem_MALLOC(length+1);
+
+	if (buffer == NULL)
+		return NULL;
+
+	if (PyUnicode_EncodeDecimal(u, length, buffer, NULL)) {
+		PyMem_FREE(buffer);
+		return NULL;
+	}
+	result = PyLong_FromString(buffer, NULL, base);
+	PyMem_FREE(buffer);
+	return result;
+}
+#endif
+
 typedef unsigned char Py_UCS1;
 typedef unsigned short Py_UCS2;
 
